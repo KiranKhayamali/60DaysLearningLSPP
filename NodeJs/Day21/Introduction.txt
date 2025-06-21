@@ -1,0 +1,75 @@
+What is Node.js?
+- Node.js is an open-source, cross-platform JavaScript runtime environment
+- Open source: Source code is publicly available for sharing and modification
+- Cross platform: Available on Mac, Windows and Linux
+- JavaScript runtime environment: provides all the necessary components in order to use and run a JavaScript program outside the browser
+
+Why learn Node.js?
+- Build end to end JavaScript applications
+- A number of major companies like LinkedIn, Netflix, PayPal have all migrated from other backend technologies to Node.js
+- Full stack development is one of the most sought out skill sets by companies
+- Huge community support
+
+ECMAScript
+- In 1993, the first web browser with a user interface called Mosaic was released
+- In 1994, the lead developers of Mosaic founded a company called Netscape and released a more polished browser called Netscape Navigator
+- Web pages could only be static and there was no interactivity after a page was loaded
+- In 1995, Netscape created a new scripting language called JavaScript
+- The name was purely for marketing purpose as Java was the hot new language back then
+- In 1995, Microsoft debuted their browser Internet Explorer
+- Microsoft realized that JavaScript fundamentally changed the user experience of the web and wanted the same for internet explorer
+- But there was no specification for them to follow
+- In 1996, Microsoft reverse-engineered the Navigator interpreter to create its own scripting language called JScript
+- The difference made it difficult for developers to make their websites work well in both browsers
+- "Best viewed in Netscape" and "Best viewed in Internet Explorer" badges became common
+- In Nov 1996, Netscape submitted JavaScript to Ecma International 
+- It is an industry association dedicated to the standardization of information and communication systems
+- Netscape wanted a standard specification that all browser vendors could conform to as it would help keep other implementations consistent across browsers
+- For each new specification Ecma provides a standard specification and committee
+- In case of JavaScript, the standard is called ECMA-262 and the committee that works on ECMA-262 is called Technical Committee 39 (TC39)
+- Ecma however decided to use the term "ECMAScript" to talk about the official language
+- The reason for this is because Oracle(who acquired Microsystems) owns the trademark for the term "JavaScript"
+- ECMAScript refers to the standard language whereas JavaScript is what we use in practice and builds on top of ECMAScipt
+- ECMAScript 2015 (ES6) is the modern JavaScript features
+
+Chrome V8 Engine 
+- A JavaScript engine is a program that executes JavaScript code
+- In 2008, Google created its own JavaScript engine called V8
+- V8 is written in C++ and can be used independently or can be embedded into other C++ programs
+- That allows us to write our own C++ programs which can do everything that V8 can do and more
+- Our C++ program can run ECMAScript and additional features that we choose to incorporate
+- For example, features that are available in C++ but not available with JavaScript
+
+JavaScript Runtime Environment
+- JavaScript runtime is and environment which provides all the necessary components in order to use and run a JavaScript program
+- Every browser has a JavaScript Engine
+- A JavaScript Engine is one component in the JavaScript Runtime
+- What else does the JavaScript Runtime consist of?
+	- JavaScript Engine
+		- Memory
+		- Call Stack
+	- Web/Browser APIs
+		- DOM
+		- Storage
+		- Timers
+	- Microtask queue
+	- Callback/Task queue
+	- Event Loop
+
+Modules
+- A module is an encapsulated and reusable chunk of code that has its own context
+= In Node.js, each file is treated as a separate module
+- Types of modules:
+	1. Local modules: Modules that we create in our application
+	2. Built-in modules: Modules that Node.js ships with out of the box
+	3. Third party modules: Modules written by other developers that we can use in our 	application
+
+Local modules
+- In node.js, each file is a module that is isolated by default
+- To load a module into another file, we use the require function
+- When index.js is executed, the code in the module is also executed
+- If the file we are requiring is a JavaScript file, we can skip specifying the extension and node.js will infer it on our behalf
+
+Module Scope 
+- Each loaded module in Node.js is wrapped with an IIFE that provides private scoping of code
+- IIFE allows us to repeat variable or function names without any conflicts
