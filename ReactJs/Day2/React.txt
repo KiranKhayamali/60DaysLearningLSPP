@@ -1,0 +1,15 @@
+What is React?
+	- Open source library for building interfaces 
+	- Not a framework
+	- Focus on User Interface
+	- Rich Ecosystem
+Why learn React?
+	- Created and maintained by Facebook or META
+	- More than 100k stars on GitHub
+	- In demand skillset
+	- Seamlessly integrate react into any of applications
+	- React native for mobile development
+Advantage of React:
+	- Component Based Architecture
+	- Reusable Code
+	- React is declarative

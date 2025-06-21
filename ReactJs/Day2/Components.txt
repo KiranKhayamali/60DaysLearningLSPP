@@ -1,0 +1,16 @@
+- Components describe a part of the user interface
+- They are reusable and can be nested inside other components
+- Two types of Components:
+	- Functional Components : Normal javascript function that returns html
+	- Class Components : Class extending component class and render method returning html
+
+Functional Components
+- Simple Functions
+- Use Function components as much as possible 
+- Absence of 'this' keyword
+- Mainly responsible for the UIs
+
+Class Components
+- More feature rich
+- Maintain their own private data state
+- Complex UI logic
