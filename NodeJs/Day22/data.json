@@ -1,0 +1,7 @@
+{
+    "name": "Peter Parker",
+    "address": {
+        "street": "Spiderman Road",
+        "city": "New York"
+    }
+}
