@@ -1,0 +1,30 @@
+CommonJS
+- Each file is treated as module
+- Variables, functions, classes, etc. are not accessible to other files by default
+- Explicitly tell the module system which parts of our code should be exported via module.exports or exports
+- To import code into a file, use the require() function
+
+ES6 modules
+- At the time Node.js was created, there was no built-in module system in JavaScript
+- Node.js defaulted to CommonJS as its module system
+- As of ES2015, JavaScript does have a standardized module system as part of the language itself
+- That module system is called EcmaScript modules or ES modules or ESM for short
+- Instead of module.exports, we use the export keyword
+- The export can be default or named
+- We import the exported variables or functions using the import keyword
+- If it is a default export, we can assign any name while importing
+- If it is a named export, the import name must be the same
+
+//Importing JSON
+- JavaScript Object Notation
+- A data interchange format commonly used with web servers
+
+Built=in modules
+- Modules that Node.js ships with
+- Also referred to as core modules
+- Import the module before we can use it 
+  - path
+  - events
+  - fs 
+  - stream
+  - http
