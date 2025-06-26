@@ -1,0 +1,41 @@
+Thread Pool
+- Every method in node.js that has the "sync" suffix always runs on the main thread and is blocking
+- A few async methods like fs.readFile and crypto.pbkdf2 run on seperate thread in libuv's thread pool. They do run synchronously in their own thread but as far as the main thread is concerned, it appears as if the method is running asynchronously
+- Libuv's thread pool has 4 threads
+- By increasing the thread pool size, we are able to improve the local time taken to run multiple calls of synchronous method like pdkdf2
+- Increasing the thread pool size can help with performance but that is limited by the number of available CPU cores
+- Although both crypto.pbkdf2 and https.request are asynchronous, https.request method does not seem to use the thread pool
+- https.request does not seem to be affected by the number of CPU cores either
+
+Network I/O 
+- https.request is a network input/output operation and not a CPU bound operation
+- It does not use the thread pool
+- Libuv instead delegates the work to the operating system kernel and whenever possible, it will poll the kernel and see if the request has completed
+
+Libuv and Async methods
+- In node.js, async methods are handled by libuv
+- They are handled in two different ways: Native async mechanism, Thread pool
+- Whenever possible, Libuv will use native async mechanisms in the OS so as to avoid blocking the main thread
+- Since this is part of the kernel, there is different mechanism for each OS. We have epoil for linux, kqueue for IO completion port on windows
+- Relying on native async mechanisms makes node scalable as the only limitation is the operating system kernel
+- Example of this type is a network I/O operation
+- If there is no native async support and the task is file I/O or CPU intensive, libuv uses the thread pool to avoid blocking the main thread
+- Although the thread pool preserves asynchronicity with respect to node's main thread, it can still become a bottleneck if all threads are busy
+
+Event Loop
+- It is a C program and is part of libuv
+- A design pattern that orchestrates or co-ordinates the execution of synchronous and asynchronous code in Node.js
+- User written synchronous JavaScript code takes priority over async code that the runtime would like to execute
+- Only after the call stack is empty, the event loop comes into picture
+- Execution Order:
+  1. Any callbacks in the micro task queues are executed. First, tasks in the nextTick queue and only then tasks in the promise queue
+  2. All callbacks withing timer queue are executed
+  3. Callbacks in the micro task queues if present are executed. Again, first tasks in the nextTick queue and then tasks in the promise queue
+  4. All callbacks within I/O queue are executed
+  5. Callbacks in the micro task queue if present are executed. nextTick queue followed by promise queue.
+  6. All callbacks in the check queue are executed
+  7. Callbacks in the micro task queue if present are executed. Again, first tasks in the nextTick queue and then tasks in the promise queue
+  8. All callbacks in the close queue are executed
+  9. For one final time in the same loop, the micro task queues are executed. nextTick queue followed by promise queue
+- If there are more callbacks to be processed, the loop is kept alive for one more run and the same steps are repeated
+- On the other hand, if all callbacks are executed and there is no more code to process, the event loop exits.
