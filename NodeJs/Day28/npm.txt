@@ -1,0 +1,82 @@
+npm
+- What is npm?
+    1. It is the world's largest software library(registry)
+    2. It is a software package manager
+
+npm is a Software Library (npmjs.com)
+- A book library contains books written by various authors 
+- npm is a library or a registry which contains code packages written by various developers
+- It is a large public database of JavaScript code that developers from all over the world can use to share and borrow code
+- It we author a "code package", we can publish it to the npm registry for others to use
+- If we come across a code package that is authored by someone else and solves the problem we have at hand, we can borrow that code without having to reinvent the wheel
+
+npm is a Software Package Manager 
+- Developers publish and consume code packages
+- How does a developer publish a package?
+- How does a developer consume a package?
+- What happens if the code package author decides to change a function name in a package?
+- How would one update an already installed package?
+- What if the package I am consuming is dependent on another package?
+- A command line interface tool that lets us manage packages in a project
+
+npm and Other Package Manager
+- Other package managers such as pnpm and Yarn
+- npm is the default package manager for Node.js 
+- npm did stand for node package manager when it first started out 
+- Now, it is package manager for the JavaScript programmimg language
+
+Why learn about npm?
+- When building enterprise scale applications, we often need to rely on code written by other developers, we need npm
+
+package.json (npm init or manually list the package.json or npm init --yes for default)
+- What?
+    - package.json is npm's configuration file
+    - It is a json file that typically lives in the root directory of our package and holds various metadata relevant to the package
+- Why?
+    - package.json is the central place to configure and describe how to interact with and run our package
+    - It is primarily used by the npm CLI
+
+Installing Package 
+- npm install package_name, is used in CLI to install packages
+- In case of huge amount of packages to be installed(ie depedencies), we use only npm install script 
+- For installing specfic version package, we use the script:
+    npm install package_name@version
+
+Semantic Versioning
+- SemVer is one of the most widely adopted versioning systems
+- A simple set of rules and requirements that dictate how version numbers are assigned and incremented
+- It is crucial to keep a semantic and historical task of changes
+- Version numbers and the way they change convey meaning about the underlying code and what has been modified from one version to the next
+- X.Y.Z, where X => Major version, Y => Minor version, Z => Patch
+- Rules:
+    - When we fix a bug and the code stays backwards-compatible we increment the patch version. (ie. 1.1.1 to 1.1.2)
+    - When we add new functionality but the code still stays backwards-compatible, we increment the minor version.
+    - We also reset the patch version to zero. (ie. 1.1.1 to 1.2.0)
+    - When we make changes and the code is no more backwards-compatible, we increment the major version.
+    - We have to reset the minor and patch version to zero. (ie. 1.1.1 to 2.0.0)
+- Semantic versioning always starts with 0.1.0
+- 0.Y.Z (a major version of zero) is used for initial development
+- When the code is production-ready, we increment to version 1.0.0
+- Even the simplest of changes has to be done with an increase in the version number 
+
+Global Package
+- We can install global package using:
+    npm install -g package_name
+- The global packages are not listed in the depedencies in package.json, developers have to manually install the global packages
+- nodemon is a useful global package to track the changes in the code.(similar to watchmode)
+- We can uninstall global package using:
+    npm uninstall -g package_name
+
+Scripts
+- An npm script is a convenient way to bundle common commands for use in a project
+- They are typically entered in the command line in order to do something with the application
+- npm scripts are stored in a project's package.json file, giving access to everyone who has access to the codebase
+- They also ensure that everyone is using the same command with the same options
+- Common use cases for npm scripts include building our project, starting a development server, compiling CSS, linting, minifying etc
+- npm scripts are executed using the command, npm run <SCRIPT_NAME>
+
+Publishing an npm Package
+1. Login to the npmjs.com
+2. npm adduser <username> then enter password and email
+3. npm publish 
+4. Now we can install the published package from npmjs.com 
