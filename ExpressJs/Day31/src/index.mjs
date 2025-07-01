@@ -28,6 +28,19 @@ app.get("/api/products", (request, response) => {
     ])
 });
 
+//Query parameters
+app.get("/api/users",  (request, response) => {
+    console.log(request.query);
+    const {query: {filter, value},} = request;
+    //When filter and value are undefined
+    // if (!filter && !value) return response.send(mockUsers);
+    if (filter && value) return response.send(
+        mockUsers.filter((user) => user[filter].includes(value))
+    );
+    
+    return response.send(mockUsers);
+});
+
 //Route parameters
 app.get("/api/users/:id", (request, response) => {
     // console.log(request.params); //for all users
