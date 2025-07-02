@@ -2,6 +2,8 @@ import express, { response } from 'express';
 
 const app = express();
 
+app.use(express.json()); //middleware
+
 const PORT = process.env.PORT || 3000;
 const mockUsers = [
     {id: 1, username: "kiran", displayName: "Kiran"},
@@ -39,6 +41,15 @@ app.get("/api/users",  (request, response) => {
     );
     
     return response.send(mockUsers);
+});
+
+//POST requests
+app.post("/api/users", (request, response) => {
+    // console.log(request.body);
+    const {body} = request;
+    const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...body };
+    mockUsers.push(newUser);
+    return response.status(201).send(newUser);
 });
 
 //Route parameters
