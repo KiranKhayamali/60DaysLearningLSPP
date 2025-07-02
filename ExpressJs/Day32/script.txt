@@ -1,0 +1,16 @@
+GET request
+- It is used to get or fetch data from the server
+
+POST request
+- It is used to post or publish the data to the server
+
+PUT request
+- Similar to post request but it overwrites the data in the server if data is already present
+- It is used to update the entire object
+
+PATCH request
+- PATCH request helps us to modify reauired data without writing unchanged data again
+- It is used to update only certain fields in the object
+
+DELETE request
+- It is used to delete object
