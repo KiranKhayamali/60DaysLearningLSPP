@@ -52,6 +52,20 @@ app.post("/api/users", (request, response) => {
     return response.status(201).send(newUser);
 });
 
+//PUT requests
+app.put("/api/users/:id", (request, response) => {
+    const { body, params: {id},} = request;
+
+    const parseID = parseInt(id);
+    if (isNaN(parseID)) return response.sendStatus(400); //Invalid id
+
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parseID);
+    if (findUserIndex === -1) return response.sendStatus(404);
+
+    mockUsers[findUserIndex] = {id: parseID, ...body};
+    return response.sendStatus(200);
+});
+
 //Route parameters
 app.get("/api/users/:id", (request, response) => {
     // console.log(request.params); //for all users
