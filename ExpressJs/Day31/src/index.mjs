@@ -1,5 +1,5 @@
 import express from "express";
-import {body, query, validationResult} from "express-validator";
+import {body, query, validationResult, matchedData} from "express-validator";
 
 
 const app = express();
@@ -93,8 +93,9 @@ app.post(
             return response.status(400).send({errors: result.array()});
         };
         
-        const {body} = request;
-        const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...body };
+        const data = matchedData(request);
+        console.log(data); 
+        const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...data };
         mockUsers.push(newUser);
         return response.status(201).send(newUser);
 });
