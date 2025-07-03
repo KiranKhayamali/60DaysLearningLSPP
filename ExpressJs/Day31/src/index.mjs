@@ -99,12 +99,8 @@ app.patch("/api/users/:id", resolveIndexByUserId, (request, response) => {
 });
 
 //DELETE requests
-app.delete("/api/users/:id", (request, response) => {
-    const {params: {id}} = request;
-    const parseID = parseInt(id);
-    if (isNaN(parseID)) return response.sendStatus(400);
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parseID);
-    if (findUserIndex === -1) return response.sendStatus(404);
+app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {findUserIndex} = request;
     mockUsers.splice(findUserIndex, 1); //delete the item
     return response.sendStatus(200);
 });
