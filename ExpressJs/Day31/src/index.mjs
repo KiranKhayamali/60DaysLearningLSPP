@@ -1,9 +1,18 @@
-import express, { response } from 'express';
+import express, { request, response } from 'express';
 
 const app = express();
 
 app.use(express.json()); //middleware
 
+const loggingMiddleWare = (request, response, next) => {
+    console.log(`${request.method} - ${request.url}`);
+    next();
+};
+
+app.use(loggingMiddleWare, (request, response, next) => { //enabling middleware globally and we can implement multiple middleware
+    console.log("Finished Logging......");
+    next();
+}); 
 const PORT = process.env.PORT || 3000;
 const mockUsers = [
     {id: 1, username: "kiran", displayName: "Kiran"},
