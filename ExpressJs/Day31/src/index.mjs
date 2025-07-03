@@ -1,5 +1,6 @@
 import express from "express";
-import {body, query, validationResult, matchedData} from "express-validator";
+import {body, query, validationResult, matchedData, checkSchema} from "express-validator";
+import { createUserValidationSchema } from "./utils/validationSchema.mjs";
 
 
 const app = express();
@@ -78,26 +79,19 @@ app.get("/api/users", query("filter").isString().notEmpty().withMessage("Mustnot
 });
 
 //POST requests
-app.post(
-    "/api/users", 
-    body("username")
-    .notEmpty().withMessage("Username cannot be empty")
-    .isLength({min:3, max:32}).withMessage("Username must be at least 3 and at most 32 characters")
-    .isString(),
-    body("displayName").notEmpty(),
-    (request, response) => {
-        const result = validationResult(request);
-        console.log(result);
+app.post("/api/users", checkSchema(createUserValidationSchema), (request, response) => {
+    const result = validationResult(request);
+    console.log(result);
 
-        if (!result.isEmpty()) {
-            return response.status(400).send({errors: result.array()});
-        };
-        
-        const data = matchedData(request);
-        console.log(data); 
-        const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...data };
-        mockUsers.push(newUser);
-        return response.status(201).send(newUser);
+    if (!result.isEmpty()) {
+        return response.status(400).send({errors: result.array()});
+    };
+    
+    const data = matchedData(request);
+    console.log(data); 
+    const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...data };
+    mockUsers.push(newUser);
+    return response.status(201).send(newUser);
 });
 
 //PUT requests
