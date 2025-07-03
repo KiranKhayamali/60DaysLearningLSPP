@@ -1,5 +1,5 @@
 import express from "express";
-import {query, validationResult} from "express-validator";
+import {body, query, validationResult} from "express-validator";
 
 
 const app = express();
@@ -78,12 +78,25 @@ app.get("/api/users", query("filter").isString().notEmpty().withMessage("Mustnot
 });
 
 //POST requests
-app.post("/api/users", (request, response) => {
-    // console.log(request.body);
-    const {body} = request;
-    const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...body };
-    mockUsers.push(newUser);
-    return response.status(201).send(newUser);
+app.post(
+    "/api/users", 
+    body("username")
+    .notEmpty().withMessage("Username cannot be empty")
+    .isLength({min:3, max:32}).withMessage("Username must be at least 3 and at most 32 characters")
+    .isString(),
+    body("displayName").notEmpty(),
+    (request, response) => {
+        const result = validationResult(request);
+        console.log(result);
+
+        if (!result.isEmpty()) {
+            return response.status(400).send({errors: result.array()});
+        };
+        
+        const {body} = request;
+        const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...body };
+        mockUsers.push(newUser);
+        return response.status(201).send(newUser);
 });
 
 //PUT requests
