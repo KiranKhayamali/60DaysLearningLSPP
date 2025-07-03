@@ -9,10 +9,11 @@ const loggingMiddleWare = (request, response, next) => {
     next();
 };
 
-app.use(loggingMiddleWare, (request, response, next) => { //enabling middleware globally and we can implement multiple middleware
-    console.log("Finished Logging......");
-    next();
-}); 
+// app.use(loggingMiddleWare, (request, response, next) => { //enabling middleware globally and we can implement multiple middleware
+//     console.log("Finished Logging......");
+//     next();
+// }); 
+
 const PORT = process.env.PORT || 3000;
 const mockUsers = [
     {id: 1, username: "kiran", displayName: "Kiran"},
@@ -29,7 +30,16 @@ app.listen(PORT, () => { //localhost:3000
 });
 
 //GET requests
-app.get("/", (request, response) => {
+app.get("/", (request, response, next) => {
+    console.log("Base URL 1");
+    next();
+}, (request, response, next) => {
+    console.log("Base URL 2");
+    next();
+}, (request, response, next) => {
+    console.log("Base URL 3");
+    next();
+}, (request, response) => {
     response.status(201).send({msg : "Hello World!"});
 });
 
