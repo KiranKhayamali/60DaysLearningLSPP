@@ -1,4 +1,6 @@
-import express, { request, response } from 'express';
+import express from "express";
+import {query, validationResult} from "express-validator";
+
 
 const app = express();
 
@@ -62,8 +64,9 @@ app.get("/api/products", (request, response) => {
 });
 
 //Query parameters
-app.get("/api/users",  (request, response) => {
-    console.log(request.query);
+app.get("/api/users", query("filter").isString().notEmpty().withMessage("Mustnot be empty").isLength({min: 3, max: 10}).withMessage("Must be 3 to 10 characters"), (request, response) => {
+    const result = validationResult(request);
+    console.log(result);
     const {query: {filter, value},} = request;
     //When filter and value are undefined
     // if (!filter && !value) return response.send(mockUsers);
