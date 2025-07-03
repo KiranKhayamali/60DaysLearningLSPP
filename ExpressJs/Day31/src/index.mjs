@@ -14,6 +14,18 @@ const loggingMiddleWare = (request, response, next) => {
 //     next();
 // }); 
 
+const resolveIndexByUserId = (request, response, next) => { //Similar code from put, patch and delete request are overrid by middleware
+    const { params: {id} } = request;
+
+    const parseID = parseInt(id);
+    if (isNaN(parseID)) return response.sendStatus(400); //Invalid id
+
+    const findUserIndex = mockUsers.findIndex((user) => user.id === parseID);
+    if (findUserIndex === -1) return response.sendStatus(404); 
+    request.findUserIndex = findUserIndex;
+    next(); 
+};
+
 const PORT = process.env.PORT || 3000;
 const mockUsers = [
     {id: 1, username: "kiran", displayName: "Kiran"},
@@ -72,26 +84,16 @@ app.post("/api/users", (request, response) => {
 });
 
 //PUT requests
-app.put("/api/users/:id", (request, response) => {
-    const { body, params: {id},} = request;
+app.put("/api/users/:id",resolveIndexByUserId, (request, response) => {
+    const {body, findUserIndex} = request;
 
-    const parseID = parseInt(id);
-    if (isNaN(parseID)) return response.sendStatus(400); //Invalid id
-
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parseID);
-    if (findUserIndex === -1) return response.sendStatus(404);
-
-    mockUsers[findUserIndex] = {id: parseID, ...body};
+    mockUsers[findUserIndex] = {id: mockUsers[findUserIndex].id, ...body};
     return response.sendStatus(200);
 });
 
 //PATCH requests
-app.patch("/api/users/:id", (request, response) => {
-    const {body, params: {id}, } = request;
-    const parseID = parseInt(id);
-    if (isNaN(parseID)) return response.sendStatus(400);
-    const findUserIndex = mockUsers.findIndex((user) => user.id === parseID);
-    if (findUserIndex === -1) return response.sendStatus(404);
+app.patch("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {body, findUserIndex, } = request;
     mockUsers[findUserIndex] = {...mockUsers[findUserIndex], ...body};
     return response.sendStatus(200);
 });
