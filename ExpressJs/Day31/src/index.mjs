@@ -106,13 +106,9 @@ app.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
 });
 
 //Route parameters
-app.get("/api/users/:id", (request, response) => {
-    // console.log(request.params); //for all users
-    const parseID = parseInt(request.params.id);
-    console.log(parseID);
-    if (isNaN(parseID)) return response.status(400).send({msg: "Bad Request. Invalid ID!"});
-
-    const findUser = mockUsers.find((user) => user.id === parseID);
+app.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
+    const {findUserIndex} = request;
+    const findUser = mockUsers[findUserIndex];
     if (!findUser) return response.sendStatus(404);
     return response.send(findUser);
 });
