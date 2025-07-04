@@ -29,4 +29,4 @@ export const createUserQueryValidationSchema = {
             errorMessage : "Username must be a string!",
         }, 
     },
-}
+};
