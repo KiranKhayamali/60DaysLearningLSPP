@@ -1,9 +1,11 @@
 import express from "express";
-import routes from "./routes/index.mjs"
+import routes from "./routes/index.mjs";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json()); //middleware
+app.use(cookieParser("secret"));
 app.use(routes);
 
 const PORT = process.env.PORT || 3000;
@@ -13,18 +15,12 @@ app.listen(PORT, () => { //localhost:3000
 });
 
 //GET requests
-app.get("/", (request, response, next) => {
-    console.log("Base URL 1");
-    next();
-}, (request, response, next) => {
-    console.log("Base URL 2");
-    next();
-}, (request, response, next) => {
-    console.log("Base URL 3");
-    next();
-}, (request, response) => {
+app.get("/", (request, response) => {
+    response.cookie("hello", "world", {maxAge: 100000, signed: true});
     response.status(201).send({msg : "Hello World!"});
 });
+
+
 
 
 
