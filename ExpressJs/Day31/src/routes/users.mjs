@@ -8,6 +8,14 @@ import {  resolveIndexByUserId } from "../utils/middlewares.mjs";
 const router = Router(); 
 
 router.get("/api/users", checkSchema(createUserQueryValidationSchema), (request, response) => {
+    console.log(request.session.id);
+    request.sessionStore.get(request.session.id, (err, sessionData) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        };
+        console.log(sessionData);
+    });
     const result = validationResult(request);
     console.log(result);
     const {query: {filter, value},} = request;
