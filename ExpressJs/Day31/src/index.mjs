@@ -65,3 +65,9 @@ app.post("/api/cart", (request, response) => {
     }
     return response.status(201).send(item);
 });
+
+app.get("/api/cart", (request, response) => {
+    if(!request.session.user) return response.sendStatus(401);
+    return response.send(request.session.cart ?? []); //If cart is empty, it returns empty list
+});
+
