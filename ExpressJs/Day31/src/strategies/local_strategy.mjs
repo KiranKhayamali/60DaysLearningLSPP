@@ -8,6 +8,18 @@ passport.serializeUser((user, done) => { //serialize user into session
     done(null, user.id);
 });
 
+passport.deserializeUser((id, done) => {
+    console.log("Inside Deserialize");
+    console.log(`Deserializing ID: ${id}`);
+    try {
+        const findUser = mockUsers.find((user) => user.id === id);
+        if (!findUser) throw new Error("User not found");
+        done(null, findUser);
+    } catch (err) {
+        done(err, null);
+    }
+});
+
 export default passport.use(
     new Strategy((username, password, done) => {
         console.log(`Username ; ${username}`);
