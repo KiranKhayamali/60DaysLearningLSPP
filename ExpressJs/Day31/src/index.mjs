@@ -81,3 +81,10 @@ app.post("/api/auth", passport.authenticate("local"), (request, response) => {
     response.sendStatus(200);
 });
 
+app.get("/api/auth/status", (request, response) => {
+    console.log("Inside /auth/status endpoint");
+    console.log(request.user);
+    console.log(request.session);
+    return request.user ? response.send(request.user) : response.sendStatus(401);
+});
+
