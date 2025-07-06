@@ -2,6 +2,12 @@ import passport from "passport";
 import {Strategy} from "passport-local";
 import { mockUsers } from "../utils/constants.mjs";
 
+passport.serializeUser((user, done) => { //serialize user into session
+    console.log("Inside serialize user");
+    console.log(user);
+    done(null, user.id);
+});
+
 export default passport.use(
     new Strategy((username, password, done) => {
         console.log(`Username ; ${username}`);
