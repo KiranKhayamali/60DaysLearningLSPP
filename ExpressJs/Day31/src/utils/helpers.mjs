@@ -7,3 +7,7 @@ export const hashPassword = (password) => {
     console.log(salt);
     return bcrypt.hashSync(password, salt);
 };
+
+export const comparePassword = (myPlaintextPassword, hashed) => {
+    bcrypt.compareSync(myPlaintextPassword, hashed);
+};
