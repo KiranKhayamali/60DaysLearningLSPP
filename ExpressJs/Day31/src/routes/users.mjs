@@ -36,7 +36,14 @@ router.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
     return response.send(findUser);
 });
 
-router.post("/api/users", async (request, response) => {
+router.post("/api/users", checkSchema(createUserValidationSchema), async (request, response) => {
+    const result = validationResult(request);
+    console.log(result);
+    if (!result.isEmpty()) return response.status(400).send(result.array());
+    
+    const data = matchedData(request);
+    console.log(data);
+
     const {body} =request;
 
     const newUser = new User(body);
