@@ -4,9 +4,14 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import { mockUsers } from "./utils/constants.mjs";
 import passport from "passport";
+import mongoose from "mongoose";
 import "./strategies/local_strategy.mjs";
 
 const app = express();
+
+mongoose.connect("mongodb://localhost/express")
+    .then(() => console.log("Connected to Database"))
+    .catch((err) => console.log(`Error: ${err}`));
 
 app.use(express.json()); //middleware
 app.use(cookieParser("secret"));
