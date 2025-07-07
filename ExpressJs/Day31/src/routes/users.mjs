@@ -4,6 +4,7 @@ import { createUserQueryValidationSchema } from "../utils/queryValidationSchema.
 import { createUserValidationSchema } from "../utils/validationSchema.mjs";
 import { mockUsers } from "../utils/constants.mjs";
 import {  resolveIndexByUserId } from "../utils/middlewares.mjs";
+import { User } from "../mongoose/schemas/user.mjs";
 
 const router = Router(); 
 
@@ -35,19 +36,16 @@ router.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
     return response.send(findUser);
 });
 
-router.post("/api/users", checkSchema(createUserValidationSchema), (request, response) => {
-    const result = validationResult(request);
-    console.log(result);
+router.post("/api/users", async (request, response) => {
+    const {body} =request;
 
-    if (!result.isEmpty()) {
-        return response.status(400).send({errors: result.array()});
-    };
-    
-    const data = matchedData(request);
-    console.log(data); 
-    const newUser = { id: mockUsers[mockUsers.length -1].id +1, ...data };
-    mockUsers.push(newUser);
-    return response.status(201).send(newUser);
+    const newUser = new User(body);
+    try {
+        const savedUser = await newUser.save();
+        return response.status(201).send(savedUser);
+    } catch (err) {
+        return response.sendStatus(400);
+    }
 });
 
 router.put("/api/users/:id",resolveIndexByUserId, (request, response) => {
@@ -68,7 +66,5 @@ router.delete("/api/users/:id", resolveIndexByUserId, (request, response) => {
     mockUsers.splice(findUserIndex, 1); //delete the item
     return response.sendStatus(200);
 });
-
-
 
 export default router; 
