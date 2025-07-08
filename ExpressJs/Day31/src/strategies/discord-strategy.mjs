@@ -2,6 +2,12 @@ import passport from "passport";
 import {Strategy} from "passport-discord";
 import { DiscordUser } from "../mongoose/schemas/discord_user.mjs";
 
+passport.serializeUser((user, done) => { //serialize user into session data
+    console.log("Inside serialize user");
+    console.log(user);
+    done(null, user.id);
+});
+
 export default passport.use(
     new Strategy({
         clientID: "1392149637258805280",
