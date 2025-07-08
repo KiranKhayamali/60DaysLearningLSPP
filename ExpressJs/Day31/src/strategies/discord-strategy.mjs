@@ -8,6 +8,18 @@ passport.serializeUser((user, done) => { //serialize user into session data
     done(null, user.id);
 });
 
+passport.deserializeUser(async (id, done) => {
+    console.log("Inside Deserialize");
+    console.log(`Deserializing ID: ${id}`);
+    try {
+        const findUser = await DiscordUser.findById(id);
+        if (!findUser) throw new Error("User not found");
+        done(null, findUser);
+    } catch (err) {
+        done(err, null);
+    }
+});
+
 export default passport.use(
     new Strategy({
         clientID: "1392149637258805280",
