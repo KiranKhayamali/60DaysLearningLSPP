@@ -5,7 +5,9 @@ import session from "express-session";
 import { mockUsers } from "./utils/constants.mjs";
 import passport from "passport";
 import mongoose from "mongoose";
-import "./strategies/local_strategy.mjs";
+import MongoStore from "connect-mongo";
+// import "./strategies/local_strategy.mjs";
+import "./strategies/discord-strategy.mjs";
 
 const app = express();
 
@@ -23,6 +25,9 @@ app.use(
         cookie: {
             maxAge: 60000 * 60, //60000 means 60 sec and its total 1 hrs
         },
+        store: MongoStore.create({
+            client: mongoose.connection.getClient()
+        })
     })
 );
 
@@ -100,3 +105,4 @@ app.post("/api/auth/logout", (request, response) => {
         response.send(200);
     });
 });
+
