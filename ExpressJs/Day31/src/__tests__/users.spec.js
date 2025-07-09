@@ -1,6 +1,6 @@
+import validator from "express-validator";
 import { getUserByIdHandler, createUserHandler } from "../handlers/users.mjs";
 import { mockUsers } from "../utils/constants.mjs";
-
 
 const mockRequest = {
     findUserIndex: 3,
@@ -28,4 +28,16 @@ describe("get users", () => {
         expect(mockResponse.sendStatus).toHaveBeenCalledTimes(1);
 
     });
+});
+
+describe("create users", () => {
+
+    it("should status of 400 when there are errors", async () => {
+        await createUserHandler(mockRequest, mockResponse);
+        expect(validator.validationResult).toHaveBeenCalled();
+        expect(validator.validationResult).toHaveBeenCalledWith(mockRequest);
+        expect(mockResponse.status).toHaveBeenCalledWith(400); 
+        expect(mockResponse.send).toHaveBeenCalledWith([{ msg: "Invalid field"}]); 
+    });
+
 });
