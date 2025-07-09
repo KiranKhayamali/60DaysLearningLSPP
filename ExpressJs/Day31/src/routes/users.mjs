@@ -3,8 +3,10 @@ import { checkSchema, validationResult, matchedData } from "express-validator";
 import { createUserQueryValidationSchema } from "../utils/queryValidationSchema.mjs";
 import { createUserValidationSchema } from "../utils/validationSchema.mjs";
 import { mockUsers } from "../utils/constants.mjs";
-import {  resolveIndexByUserId } from "../utils/middlewares.mjs";
+import { resolveIndexByUserId } from "../utils/middlewares.mjs";
 import { User } from "../mongoose/schemas/user.mjs";
+import { hashPassword } from "../utils/helpers.mjs";
+import { getUserByIdHandler } from "../handlers/users.mjs";
 
 const router = Router(); 
 
@@ -15,6 +17,7 @@ router.get("/api/users", checkSchema(createUserQueryValidationSchema), (request,
             console.log(err);
             throw err;
         };
+        console.log("Inside Session Store Get");
         console.log(sessionData);
     });
     const result = validationResult(request);
@@ -29,12 +32,7 @@ router.get("/api/users", checkSchema(createUserQueryValidationSchema), (request,
     return response.send(mockUsers);
 });
 
-router.get("/api/users/:id", resolveIndexByUserId, (request, response) => {
-    const {findUserIndex} = request;
-    const findUser = mockUsers[findUserIndex];
-    if (!findUser) return response.sendStatus(404);
-    return response.send(findUser);
-});
+router.get("/api/users/:id", resolveIndexByUserId, getUserByIdHandler);
 
 router.post("/api/users", checkSchema(createUserValidationSchema), async (request, response) => {
     const result = validationResult(request);
@@ -42,11 +40,10 @@ router.post("/api/users", checkSchema(createUserValidationSchema), async (reques
     if (!result.isEmpty()) return response.status(400).send(result.array());
     
     const data = matchedData(request);
+    
+    data.password = hashPassword(data.password);
     console.log(data);
-
-    const {body} =request;
-
-    const newUser = new User(body);
+    const newUser = new User(data);
     try {
         const savedUser = await newUser.save();
         return response.status(201).send(savedUser);
