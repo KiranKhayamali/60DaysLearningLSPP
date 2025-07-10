@@ -28,4 +28,11 @@ describe("create user and login", () => {
         expect(response.statusCode).toBe(201);
     });
 
+    it("should log the user in", async () => {
+        const response = await request(app).post("/api/auth").send({
+            username: "test",
+            password: "password"
+        });
+        expect(response.statusCode).toBe(200);
+    });
 });
