@@ -1,19 +1,26 @@
 import request from "supertest";
-import express from "express";
+import mongoose from "mongoose";
+import { createApp } from "../createApp.mjs";
 
-const app = express();
+let app;
 
-app.get("/hello", (req, res) => res.sendStatus(200));
+beforeAll(async () => {
+    await mongoose.connect("mongodb://localhost/express")
+    .then(() => console.log("Connected to Test Database"))
+    .catch((err) => console.log(`Error: ${err}`));
+    
+    app = createApp();
+});
 
-describe("hello endpoint", () => {
-    it("get /hello and expect 200", async () => {
-        //request(qpp).get("/hello").expect(201).end((err, res) => { //this method is not praticable as it responds passed even in case of failure
-            // if (err) throw err;
-            // expect(res.statusCode).toBe(200);
-        // })
+afterAll(async () => {
+    await mongoose.connection.dropDatabase();
+    await mongoose.connection.close();
 
-        const response = await request(app).get("/hello");
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toStrictEqual({msg: "invalid"});
-    })
-})
+});
+
+describe("/api/auth", () => {
+    it("should return 401 when not logged in", async () => {
+        const response = await request(app).get("/api/auth/status");
+        expect(response.statusCode).toBe(401);
+    });
+});
