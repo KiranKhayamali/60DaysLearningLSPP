@@ -28,11 +28,18 @@ describe("create user and login", () => {
         expect(response.statusCode).toBe(201);
     });
 
-    it("should log the user in", async () => {
+    it("should log the user in and visit /api/auth/status", async () => {
         const response = await request(app).post("/api/auth").send({
             username: "test",
             password: "password"
+        }).then((res) => {
+            return request(app).get("/api/auth/status").set("Cookie", res.headers["set-cookie"]);
         });
+        expect(response.statusCode).toBe(200);
+    });
+
+    it("should visit /api/auth/status and return authenticated user", async () => {
+        const response = await request(app).get("/api/auth/status");
         expect(response.statusCode).toBe(200);
     });
 });
