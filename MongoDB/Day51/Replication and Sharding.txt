@@ -1,0 +1,50 @@
+Replication
+- Replication in MongoDB ensures that data is duplicated across multiple servers, providing data redundancy and high availability.
+- The key component for replication in MongoDB is the Replica Set.
+
+What is a Replica Set?
+- A Replica Set is a group of MongoDB servers that maintain the same data set. 
+- It provides automatic failover and data redundancy.
+- Key Components of a Replica Set:
+    1. Primary: The primary node accepts all writes and reads (by default). It is the main source of truth for data in the replica set.
+    2. Secondary: These nodes are copies of the primary. They replicate the data from the primary asynchronously and can serve read requests (depending on read preferences).
+    3. Arbiter: A special type of secondary that does not store data but participates in elections to ensure that the replica set has a majority of votes for elections.
+    4. Oplog (Operations Log): Each member of the replica set maintains a copy of the oplog, which records all changes made to the database. This allows secondaries to replicate data from the primary.
+- Replica Set Behavior:
+    - Automatic Failover: If the primary node goes down, an election is triggered to choose a new primary. This ensures the system remains available without manual intervention.
+    - Read/Write Preferences: MongoDB allows us to configure read preferences (e.g., to read from the primary or a secondary) and write concern (e.g., how many nodes should acknowledge a write before it is considered successful).
+
+For replication:
+- Run 3 command prompt in administrator at the storage path of mongodb.cfg 
+- Run following command in separate command prompt:
+    - mongod --port 27018 --dbpath "C:\Program Files\MongoDB\Server\8.0\data\db1" --replSet rs1
+    - mongod --port 27019 --dbpath "C:\Program Files\MongoDB\Server\8.0\data\db2" --replSet rs1
+    - mongod --port 27020 --dbpath "C:\Program Files\MongoDB\Server\8.0\data\db3" --replSet rs1
+- Run another command prompt in administrator
+- mongosh --port 27018 //for running the replication
+- rs.initiate({
+     _id: "rs1",
+     members: [
+     { _id: 0, host: "localhost:27018" },
+     { _id: 1, host: "localhost:27019" },
+     { _id: 2, host: "localhost:27020" }
+     ]
+     }) // for initiate the replication, it will show rs1 secondary server restart it for making primary server
+- Run another 2 command prompt in administrator
+- Run following command in separate command prompt:
+    - mongosh --port 27019
+    - mongosh --port 27020 //these will show rs1 secondary server
+    - rs.status() //for checking the primary member and secondary member
+
+Sharding
+- Sharding is the process of horizontally partitioning data across multiple machines to support large datasets and high throughput operations.
+- Shards are MongoDB instances that hold subsets of data.
+- Sharding in MongoDB is useful when the data set becomes too large to fit on a single server or when you need to support more traffic.
+- Key Components of Sharding:
+    1. Shard: The individual MongoDB instances that store the actual data. Each shard holds a subset of the data.
+    2. Mongos: A routing service that directs client requests to the appropriate shard(s).
+    3. Config Servers: These servers store metadata about the sharded cluster and manage the configuration settings. Typically, there are 3 config servers to ensure redundancy. 
+- Sharding Concepts:
+    1. Shard Key: The field used to distribute data across shards. The choice of shard key is critical for performance. A well-chosen shard key evenly distributes the data, avoiding "hotspots". 
+    2. Chunks: Data is divided into chunks, and each chunk is assigned to a shard. Chunks are split based on the shard key.
+    3. Balancing: MongoDB periodically balances the chunks across the shards to ensure even distribution of data.
