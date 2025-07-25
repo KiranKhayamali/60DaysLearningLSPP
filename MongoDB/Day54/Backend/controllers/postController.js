@@ -34,5 +34,26 @@ const getPostById = async (req, res) => {
     };
 };
 
+const updatePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if(!post) return res.status(404).json({message: "Post Not Found!"});
+        
+        if(post.author.toString() !== req.user._id.toString()) {
+            return res.status(403).json({message: "Not authorized to update this post!"});
+        };
 
-module.exports = {createPost, getAllPosts, getPostById};
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.id,
+            {$set: req.body},
+            {new: true}
+        );
+        console.log("testing");
+        return res.json(updatePost);
+    } catch (error) {
+        return res.status(500).json({message: "Error Updating post!"});
+    };
+};
+
+
+module.exports = {createPost, getAllPosts, getPostById, updatePost};
