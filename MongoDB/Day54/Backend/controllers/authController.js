@@ -1,9 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
-const dotenv = require("dotenv");
-
-dotenv.config();
 
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -25,12 +22,13 @@ const registerUser = async (req, res) => {
         });
 
         const token = jwt.sign({ id: newUser._id}, JWT_SECRET, {expiresIn: "7days"});
-        res.status(201).json({
+        console.log(token);
+        return res.status(201).json({
             user: {id: newUser._id, username: newUser.username, email: newUser.email},
             token,
         });
     } catch(error){
-        res.status(500).json({message: "Server error!"});
+        return res.status(500).json({message: "Server error!"});
         console.log(error);
     }
 };
@@ -46,12 +44,12 @@ const loginUser = async (req, res) => {
         if(!isMatch) return res.status(401).json({message: "Invalid Credentials!"});
 
         const token = jwt.sign({ id: user._id}, JWT_SECRET, {expiresIn: "7days"});
-        res.json({
+        return res.json({
             user: {id: user._id, username: user.username, email: user.email},
             token,
         });
     } catch(error){
-        res.status(500).json({message: "Server Error!"});
+        return res.status(500).json({message: "Server Error!"});
     }
 };
 
