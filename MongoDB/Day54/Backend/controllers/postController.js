@@ -15,5 +15,14 @@ const createPost = async (req, res) => {
     };
 };
 
+const getAllPosts = async (req, res) => {
+    try {
+        const posts = await Post.find().populate("author", "username").sort({created_at: -1});
+        return res.json(posts);
+    } catch (error) {
+        return res.status(500).json({message: "Failed to fetch posts!"});
+    };
+};
 
-module.exports = {createPost};
+
+module.exports = {createPost, getAllPosts};
