@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const protect = async(req, res) => {
+const protect = async(req, res, next) => {
     const authHeader = req.headers.authorization;
     if(authHeader && authHeader.startsWith("Bearer ")) {
         const token = authHeader.split(" ")[1];
@@ -19,4 +20,4 @@ const protect = async(req, res) => {
     };
 };
 
-module.exports = protect;
+module.exports = {protect};
