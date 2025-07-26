@@ -13,7 +13,7 @@ const createComment = async (req, res) => {
         return res.status(201).json(comment);
     } catch (error) {
         return res.status(500).json({message: `Failed to add comment: ${error}`});
-    }
+    };
 };
 
 const deleteComment = async (req, res) => {
@@ -27,8 +27,17 @@ const deleteComment = async (req, res) => {
         return res.json({message: "Comment Sucessfully deleted"});
     } catch (error) {
         return res.status(500).json({message: "Failed to delete comment!"});
-    }
+    };
+};
+
+const getCommentForPost = async (req, res) => {
+    try {
+        const comments = await Comment.find({post: req.params.postId}).populate("user", "username").sort({created_at: -1});
+        return res.json(comments);
+    } catch (error) {
+        return res.status(500).json({message: `Failed to Fetch comment ${error}`});
+    };
 };
 
 
-module.exports = {createComment, deleteComment};
+module.exports = {createComment, deleteComment, getCommentForPost};
