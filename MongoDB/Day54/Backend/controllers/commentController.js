@@ -18,7 +18,7 @@ const createComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        const comment = await Comment.findById(req.params.commentId);
+        const comment = await Comment.findById(req.params.id);
         if(!comment) return res.status(404).json({message: "Comment Not Found!"});
         if(comment.user.toString() !== req.user._id.toString()) 
             return res.status(403).json({message: "Not authorized to delete this comment!"});
@@ -39,5 +39,21 @@ const getCommentForPost = async (req, res) => {
     };
 };
 
+const updateComment = async (req, res) => {
+    try {
+        const comment = await Comment.findById(req.params.id);
+        if(!comment) return res.status(404).json({message: "Comment Not Found!"});
 
-module.exports = {createComment, deleteComment, getCommentForPost};
+        if(comment.user.toString() !== req.user._id.toString()) return res.status(403).json({message: "Not authorized to update comment"});
+        const updatedComment = new Comment.findByIdAndUpdate(
+            req.params.id,
+            {$set: req.body},
+            {new: true}
+        );
+        return res.status(201).json(updatedComment);
+    } catch (error) {
+        return res.status(500).json({message: "Failed to update comment!"});
+    }
+}
+
+module.exports = {createComment, deleteComment, getCommentForPost, updateComment};
