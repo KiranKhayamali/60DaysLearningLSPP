@@ -1,11 +1,12 @@
 const express = require("express");
 const {protect} = require("../middlewares/authMiddleware");
-const { createComment, deleteComment } = require("../controllers/commentController");
+const { createComment, deleteComment, getCommentForPost } = require("../controllers/commentController");
 
 const router = express.Router();
 
 router.post("/:postId", protect, createComment);
-router.delete("/:postId", protect, deleteComment);
+router.delete("/:commentId", protect, deleteComment);
+router.get("/posts/:postId", protect, getCommentForPost);
 
 
 
