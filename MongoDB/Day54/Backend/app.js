@@ -4,6 +4,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth.js");
 const postRoutes = require("./routes/post.js");
 const commentRoutes = require("./routes/comment.js");
+const likeRoutes = require("./routes/like.js");
 const dotenv = require("dotenv");
 
 dotenv.config(); //loading environment variables
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/likes", likeRoutes);
 
 app.listen(PORT, () => {
     console.log("Server is running at port 5000");
