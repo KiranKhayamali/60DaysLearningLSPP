@@ -14,13 +14,26 @@ const likePost = async (req, res) => {
             user: req.user._id,
             username: user.username
         });
-        return res.status(201).json({message: `Liked the post: ${like}`});
+        return res.status(201).json({message: `Liked the post: `, like});
     } catch(error) {
         if(error.code === 11000) {
             return res.status(400).json({message: "Already liked this post!"});
         }
-        return res.status(500).json({message: `Failed to like post: ${error}`});
+        return res.status(500).json({message: `Failed to like post: ${error.message}`});
     }
 };
 
-module.exports = {likePost};
+const unlikePost = async (req, res) => {
+    try {
+        const deleted = await Like.findOneAndDelete({
+            post: req.params.postId, 
+            user: req.user._id
+        });
+        if(!deleted) return res.status(404).json({message: "Like Not Found!"});
+        return res.json({message: "Post unliked successfully"});
+    } catch (error) {
+        return res.status(500).json({message: `Failed to unlike the post: ${error.message}`});
+    }
+};
+
+module.exports = {likePost, unlikePost};
