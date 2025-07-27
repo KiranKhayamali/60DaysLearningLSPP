@@ -36,4 +36,14 @@ const unlikePost = async (req, res) => {
     }
 };
 
-module.exports = {likePost, unlikePost};
+const getLikesCount = async (req, res) => {
+    try {
+        const postId = req.params.postId;
+        const count = await Like.countDocuments({post: postId});
+        return res.json({postId, likes: count})
+    } catch (error) {
+        return res.status(500).json({message: `Error while fetching ${error}`});
+    }
+};
+
+module.exports = {likePost, unlikePost, getLikesCount};
