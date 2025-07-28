@@ -11,10 +11,13 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        tags: {
-            type: [String],
-            default: [],
-        },
+        tags:[
+            {
+                type: String,
+                lowercase: true,
+                trim: true,
+            }
+        ],
         likes: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: "User",
