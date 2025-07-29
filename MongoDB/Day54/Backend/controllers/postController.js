@@ -17,8 +17,18 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find().populate("author", "username").sort({created_at: -1});
-        return res.json(posts);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 2;
+        const skip = (page -1) * limit;
+        const total = await Post.countDocuments();
+
+        const posts = await Post.find().populate("author", "username").sort({created_at: -1}).skip(skip).limit(limit);
+        return res.json({
+            posts,
+            currentPage: page,
+            totalPages: Math.ceil(total/limit),
+            totalPost: total 
+        });
     } catch (error) {
         return res.status(500).json({message: "Failed to fetch posts!"});
     };
