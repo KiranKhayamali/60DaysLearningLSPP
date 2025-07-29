@@ -27,7 +27,7 @@ const getAllPosts = async (req, res) => {
             posts,
             currentPage: page,
             totalPages: Math.ceil(total/limit),
-            totalPost: total 
+            totalPosts: total 
         });
     } catch (error) {
         return res.status(500).json({message: "Failed to fetch posts!"});
@@ -98,14 +98,46 @@ const getPostByKeyword = async(req, res) => {
         }).populate("author", "username").sort({created_at: -1}).skip(skip).limit(limit);
         return res.json({
             posts,
-            page: page,
+            currentPage: page,
             totalPages: Math.ceil(total/limit),
-            totalPost: total
+            totalPosts: total
         });
     } catch(error) {
         return res.status(500).json({message: "Error while fetching post with keyword", errors: error});
+    };
+};
+
+const searchPostPaginated = async(req, res) => { //for searching post using both keyword and tags
+    try{
+        const {q, tags} = req.query;
+        const regex = q && typeof query === 'string' ? new RegExp(query, "i") : null;
+        const tagList = tags ? tags.split(",").map(tag => tag.trim().toLowerCase()) : [];
+        const filter = {};
+        if (regex) {
+            filter.$or = [
+                {title: regex},
+                {content: regex},
+            ];
+        };
+        
+        if(tagList.length > 0) {
+            filter.tags = {$in: tagList};
+        };
+        
+        
+        const posts = await Post.find(filter)
+            .populate("author", "username")
+            .sort({created_at: -1});
+
+        return res.json({
+            posts,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(total/limit),
+            totalPosts: total
+        });
+    } catch (error) {
+        return res.status(500).json({message: "Error while searching for post", errors: error});
     }
 };
 
-
-module.exports = {createPost, getAllPosts, getPostById, updatePost, deletePost, getPostByKeyword};
+module.exports = {createPost, getAllPosts, getPostById, updatePost, deletePost, getPostByKeyword, searchPostPaginated};
