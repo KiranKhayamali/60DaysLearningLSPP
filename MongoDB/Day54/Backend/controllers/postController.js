@@ -109,7 +109,7 @@ const getPostByKeyword = async(req, res) => {
 
 const searchPostPaginated = async(req, res) => { //for searching post using both keyword and tags
     try{
-        const {q, tags} = req.query;
+        const {q, tags, page, limit} = req.query;
         const regex = q && typeof query === 'string' ? new RegExp(query, "i") : null;
         const tagList = tags ? tags.split(",").map(tag => tag.trim().toLowerCase()) : [];
         const filter = {};
@@ -124,10 +124,14 @@ const searchPostPaginated = async(req, res) => { //for searching post using both
             filter.tags = {$in: tagList};
         };
         
+        const skip = (parseInt(page) -1) * parseInt(limit);
+        const total = await Post.countDocuments(filter);
         
         const posts = await Post.find(filter)
             .populate("author", "username")
-            .sort({created_at: -1});
+            .sort({created_at: -1})
+            .skip(skip)
+            .limit(parseInt(limit));
 
         return res.json({
             posts,
