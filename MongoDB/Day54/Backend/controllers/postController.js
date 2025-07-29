@@ -87,11 +87,21 @@ const getPostByKeyword = async(req, res) => {
         const query = req.query.q;
         if(!query) return res.status(400).json({message: "Search query is requrired!"});
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 2;
+        const skip = (page -1) * limit;
+        const total = await Post.countDocuments();
+
         const regex = new RegExp(query, "i") //case-insensitive regex
         const posts = await Post.find({
             $or: [{title: regex}, {content: regex}],
-        }).populate("author", "username").sort({created_at: -1});
-        return res.json(posts);
+        }).populate("author", "username").sort({created_at: -1}).skip(skip).limit(limit);
+        return res.json({
+            posts,
+            page: page,
+            totalPages: Math.ceil(total/limit),
+            totalPost: total
+        });
     } catch(error) {
         return res.status(500).json({message: "Error while fetching post with keyword", errors: error});
     }
