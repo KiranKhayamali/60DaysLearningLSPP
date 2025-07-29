@@ -109,7 +109,7 @@ const getPostByKeyword = async(req, res) => {
 
 const searchPostPaginated = async(req, res) => { //for searching post using both keyword and tags
     try{
-        const {q, tags, page, limit} = req.query;
+        const {q, tags, page =1, limit=3} = req.query;
         const regex = q && typeof query === 'string' ? new RegExp(query, "i") : null;
         const tagList = tags ? tags.split(",").map(tag => tag.trim().toLowerCase()) : [];
         const filter = {};
