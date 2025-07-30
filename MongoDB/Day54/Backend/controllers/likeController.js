@@ -6,13 +6,18 @@ const Like = require("../models/Like");
 const likePost = async (req, res) => {
     try {
         const postId = req.params.postId;
+        const userId = req.user._id;
         const post = await Post.findById(postId);
-        const user = await User.findById(req.user._id)
+        const user = await User.findById(userId)
         const like = await Like.create({
             post: postId,
             postTitle: post.title,
             user: req.user._id,
             username: user.username
+        });
+        // Add to post.likes
+        await Post.findByIdAndUpdate(postId, {
+            $addToSet: { likes: userId } // prevent duplicates
         });
         return res.status(201).json({message: `Liked the post: `, like});
     } catch(error) {
@@ -25,9 +30,11 @@ const likePost = async (req, res) => {
 
 const unlikePost = async (req, res) => {
     try {
+        const userId = req.user._id;
+        const postId = req.params.postId;
         const deleted = await Like.findOneAndDelete({
-            post: req.params.postId, 
-            user: req.user._id
+            post: postId, 
+            user: userId
         });
         if(!deleted) return res.status(404).json({message: "Like Not Found!"});
         return res.json({message: "Post unliked successfully"});
