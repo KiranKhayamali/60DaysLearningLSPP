@@ -124,43 +124,56 @@ const searchPostPaginated = async(req, res) => { //for searching post using both
             filter.tags = {$in: tagList};
         };
         
-        let posts;
-        let total;
         const skip = (parseInt(page) -1) * parseInt(limit);
-        
-        let sortOption = req.query.sort;
-        if(sortOption === "popular") { 
-            const pipline = [
-                {
-                    $addFields: {
-                        likeCount: {$size: "$likes"}
-                    }
-                },
-                { $sort : {likeCount : -1, created_at: -1} },//popularity then recent
-                { $skip: skip },
-                { $limit: parseInt(limit) },
-                {
-                    $lookup: {
-                        from: "users",
-                        localField: "author",
-                        foreignField: "_id",
-                        as: "author"
-                    }
-                },
-                { $unwind: "$author" }
-            ];
-            posts = await Post.aggregate(pipline);
-            total = await Post.countDocuments(filter);
-        } else {
-            posts = await Post.find(filter)
-                .populate("author", "username")
-                .sort({created_at: -1})
-                .skip(skip)
-                .limit(parseInt(limit));
 
-                total = await Post.countDocuments(filter)
-        };
+        //Sorting post using aggregation pipeline
+        // let posts;
+        // let total;
         
+        // if(sort === "popular") { 
+        //     const pipline = [
+        //         {
+        //             $addFields: {
+        //                 likeCount: {$size: "$likes"}
+        //             }
+        //         },
+        //         { $sort : {likeCount : -1, created_at: -1} },//popularity then recent
+        //         { $skip: skip },
+        //         { $limit: parseInt(limit) },
+        //         {
+        //             $lookup: {
+        //                 from: "users",
+        //                 localField: "author",
+        //                 foreignField: "_id",
+        //                 as: "author"
+        //             }
+        //         },
+        //         { $unwind: "$author" }
+        //     ];
+        //     posts = await Post.aggregate(pipline);
+        //     total = await Post.countDocuments(filter);
+        // } else {
+        //     posts = await Post.find(filter)
+        //         .populate("author", "username")
+        //         .sort({created_at: -1})
+        //         .skip(skip)
+        //         .limit(parseInt(limit));
+
+        //         total = await Post.countDocuments(filter)
+        // };
+
+        let sortOption = {created_at: -1};
+        if (sort === "popular") {
+            sortOption = {likes: -1}
+        }
+
+        const total = await Post.countDocuments(filter);
+        const posts = await Post.find(filter)
+            .populate("author", "username")
+            .sort(sortOption)
+            .skip(skip)
+            .limit(parseInt(limit));
+
         return res.json({
             posts,
             currentPage: parseInt(page),
