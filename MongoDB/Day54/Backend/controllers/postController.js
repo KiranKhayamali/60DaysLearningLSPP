@@ -137,7 +137,7 @@ const searchPostPaginated = async(req, res) => { //for searching post using both
         //                 likeCount: {$size: "$likes"}
         //             }
         //         },
-        //         { $sort : {likeCount : -1} },//popularity 
+        //         { $sort : {likeCount : -1, created_at: -1} },//popularity then recent
         //         { $skip: skip },
         //         { $limit: parseInt(limit) },
         //         {
