@@ -37,6 +37,10 @@ const unlikePost = async (req, res) => {
             user: userId
         });
         if(!deleted) return res.status(404).json({message: "Like Not Found!"});
+        // Remove userId from Post.likes array
+        await Post.findByIdAndUpdate(postId, {
+            $pull: { likes: userId }
+        });
         return res.json({message: "Post unliked successfully"});
     } catch (error) {
         return res.status(500).json({message: `Failed to unlike the post: ${error.message}`});
